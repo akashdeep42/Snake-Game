@@ -1,6 +1,7 @@
 package com.gamecodeschool.c17snake;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
@@ -34,6 +35,7 @@ public class SnakeActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mSnakeGame.resume();
+
     }
 
     // Stop the thread in snakeEngine
@@ -42,4 +44,5 @@ public class SnakeActivity extends Activity {
         super.onPause();
         mSnakeGame.pause();
     }
+
 }

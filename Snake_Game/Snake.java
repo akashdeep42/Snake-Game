@@ -7,8 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
@@ -16,11 +14,9 @@ import java.util.ArrayList;
 class Snake implements updateView{
 
     // The location in the grid of all the segments
-    public final ArrayList<Point> segmentLocations;
+    private final ArrayList<Point> segmentLocations;
 
     // How big is each segment of the snake?
-    private float snakeSpeed = 1;
-    Handler handler =   new Handler(Looper.getMainLooper());
     private final int mSegmentSize;
 
     // How big is the entire grid
@@ -42,8 +38,8 @@ class Snake implements updateView{
     private Bitmap mBitmapHeadUp;
     private Bitmap mBitmapHeadDown;
 
+    // A bitmap for the body
     private Bitmap mBitmapBody;
-    public boolean isSnakeHasPowerOfINVULNERABILITY = false;
 
 
     Snake(Context context, Point mMoveRange, int mSegmentSize) {
@@ -120,7 +116,6 @@ class Snake implements updateView{
 
         // Reset the snakeMovement
         snakeMovement = SnakeMovement.RIGHT;
-        isSnakeHasPowerOfINVULNERABILITY = false;
 
         // Delete the old contents of the ArrayList
         segmentLocations.clear();
@@ -129,7 +124,7 @@ class Snake implements updateView{
         segmentLocations.add(new Point(width / 2, height / 2));
     }
 
-    @Override
+   @Override
     public void move() {
         // Move the body
         // Start at the back and move it
@@ -149,20 +144,19 @@ class Snake implements updateView{
         // Move it appropriately
         switch (snakeMovement) {
             case UP:
-
-                p.y-=snakeSpeed;
+                p.y--;
                 break;
 
             case RIGHT:
-                p.x += snakeSpeed;
+                p.x++;
                 break;
 
             case DOWN:
-                p.y += snakeSpeed;
+                p.y++;
                 break;
 
             case LEFT:
-                p.x -=snakeSpeed;
+                p.x--;
                 break;
         }
 
@@ -175,10 +169,8 @@ class Snake implements updateView{
                 segmentLocations.get(0).y == -1 ||
                 segmentLocations.get(0).y > mMoveRange.y;
 
-        if (dead && isSnakeHasPowerOfINVULNERABILITY){
-            handleWallCollision();
-            return false;
-        }
+        // Hit any of the screen edges
+
         // Eaten itself?
         for (int i = segmentLocations.size() - 1; i > 0; i--) {
             // Have any of the sections collided with the head
@@ -191,23 +183,7 @@ class Snake implements updateView{
         }
         return dead;
     }
-    private void handleWallCollision() {
 
-        Point head = segmentLocations.get(0);
-
-        if (head.x < 0) {
-            head.x = mMoveRange.x - 1;
-        } else if (head.x >= mMoveRange.x) {
-            head.x = 0;
-        }
-
-        if (head.y < 0) {
-            head.y = mMoveRange.y - 1;
-        } else if (head.y >= mMoveRange.y) {
-            head.y = 0;
-        }
-
-    }
     boolean checkDinner(Point l) {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
@@ -223,7 +199,7 @@ class Snake implements updateView{
         }
         return false;
     }
-    @Override
+   @Override
     public void draw(Canvas canvas, Paint paint) {
 
         // Don't run this code if ArrayList has nothing in it
@@ -275,6 +251,9 @@ class Snake implements updateView{
         }
     }
 
+
+
+
     // Handle changing direction
     void switchSnakeMovement(MotionEvent motionEvent) {
 
@@ -309,6 +288,4 @@ class Snake implements updateView{
             }
         }
     }
-
-
 }
